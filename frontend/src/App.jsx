@@ -6,9 +6,9 @@ import Home from "./pages/home/Home";
 function App() {
   return (
     <div className="p-4 h-screen flex item-center justify-center">
-      <SignUp />
+      {/* <SignUp /> */}
 
-      {/* <Home /> */}
+      <Home />
     </div>
   );
 }

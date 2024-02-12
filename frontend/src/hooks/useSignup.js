@@ -1,10 +1,10 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-// import { useAuthContext } from "../context/AuthContext";
+import { useAuthContext } from "../context/AuthContext";
 
 const useSignup = () => {
   const [loading, setLoading] = useState(false);
-  // const { setAuthUser } = useAuthContext();
+  const { setAuthUser } = useAuthContext();
 
   const signup = async ({
     fullName,
@@ -48,10 +48,10 @@ const useSignup = () => {
       if (parsedData.error) {
         throw new Error(parsedData.error);
       }
-
-      // localStorage.setItem("chat-user", JSON.stringify(parsedData));
-      // setAuthUser(parsedData);
+      localStorage.setItem("chat-user", JSON.stringify(parsedData));
+      setAuthUser(parsedData);
       console.log(parsedData);
+      
     } catch (error) {
       if (error instanceof TypeError && error.message === "Failed to fetch") {
         toast.error("Network error. Please check your internet connection.");

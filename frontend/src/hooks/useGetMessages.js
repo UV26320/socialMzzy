@@ -7,23 +7,28 @@ const useGetMessages = () => {
   const { messages, setMessages, selectedConversation } = useConversation();
 
   useEffect(() => {
-    const getMessages = async () => {
+    const fetchMessages = async () => {
       setLoading(true);
       try {
         const res = await fetch(`/api/messages/${selectedConversation._id}`);
         const data = await res.json();
-        if (data.error) throw new Error(data.error);
+        if (data.error) {
+          throw new Error(data.error);
+        }
         setMessages(data);
       } catch (error) {
-        toast.error(error.message);
+        toast.error(`Error fetching messages: ${error.message}`);
       } finally {
         setLoading(false);
       }
     };
 
-    if (selectedConversation?._id) getMessages();
+    if (selectedConversation?._id) {
+      fetchMessages();
+    }
   }, [selectedConversation?._id, setMessages]);
 
   return { messages, loading };
 };
+
 export default useGetMessages;

@@ -3,28 +3,39 @@ import useConversation from "../zustand/useConversation";
 import toast from "react-hot-toast";
 
 const useGetMessages = () => {
-  const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchMessages = async () => {
+    const getMessages = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/messages/${selectedConversation._id}`);
-        const data = await res.json();
-        if (data.error) {
-          throw new Error(data.error);
+        const response = await fetch(
+          `/api/messages/${selectedConversation?._id}`
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch messages. Status: ${response.status} - ${response.statusText}`
+          );
         }
+
+        const data = await response.json();
+
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format");
+        }
+
         setMessages(data);
       } catch (error) {
-        toast.error(`Error fetching messages: ${error.message}`);
+        toast.error(error.message);
       } finally {
         setLoading(false);
       }
     };
 
     if (selectedConversation?._id) {
-      fetchMessages();
+      getMessages();
     }
   }, [selectedConversation?._id, setMessages]);
 
